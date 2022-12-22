@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@ --with ppp
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--prefix=/usr \
+		--mandir=/usr/share/man \
+		--with-libwrap \
+		--enable-bcrelay
+
+override_dh_installdocs:
+	dh_installdocs --exclude=test.txt
+
+override_dh_installinit:
+	dh_installinit -- start 20 2 3 4 5 . stop 20 1 .
+
+override_dh_installsystemd:
+	dh_installsystemd --no-enable
